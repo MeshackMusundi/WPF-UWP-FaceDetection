@@ -1,0 +1,59 @@
+﻿<mah:MetroWindow x:Class="FaceDetection.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+                 xmlns:cnv="clr-namespace:FaceDetection.Converters"
+                 DataContext="{Binding Source={StaticResource VmLocator}, Path=MainWindowVM}"
+                 WindowStartupLocation="CenterScreen"
+                 mc:Ignorable="d"
+                 Height="400" Width="600"
+                 Title="Face Detection">
+
+    <mah:MetroWindow.Resources>
+        <cnv:BitmapToBitmapSourceConverter x:Key="BitmapConverter"/>
+    </mah:MetroWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Background="{StaticResource CheckerBoardBrush}">
+            <!-- Watermark -->
+            <Viewbox Margin="30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <md:PackIcon Kind="FileImageOutline" 
+                             Foreground="#FF686868" Opacity="0.2"/>
+            </Viewbox>
+
+            <Image Margin="10">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Setter Property="Source" Value="{Binding SelectedImage, Mode=OneWay}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedImage}" Value="{x:Null}">
+                                <Setter Property="Source" 
+                                        Value="{Binding FacesBitmap, Converter={StaticResource BitmapConverter}}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Grid>
+
+        <Border Grid.Row="1" Background="{StaticResource MaterialDesignCardBackground}"
+                BorderBrush="{StaticResource MaterialDesignDivider}"
+                BorderThickness="0,1,0,0" >
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" Margin="10">
+                <Button Content="Select Image"
+                        Command="{Binding SelectImageCommand}"/>
+                <Button Margin="15,0,0,0" Content="Detect Faces"
+                        Command="{Binding DetectFacesCommand}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</mah:MetroWindow>
